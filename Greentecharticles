@@ -1,0 +1,140 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Mar  2 10:09:17 2023
+
+@author: chaub
+"""
+
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+
+# List for the ending portion of the link to go to new pages
+
+#['','P25', 'P50', 'P75', 'P100', 'P125', 'P150', 'P175', 
+
+page_num = ['','P25', 'P50', 'P75', 'P100', 'P125', 'P150', 'P175','P200', 'P225', 'P250', 'P275', 'P300', 'P325', 'P350', 'P375', 'P400']
+url_start = 'https://www.greentechmedia.com/'
+
+#Creating a list to store the article links from all pages
+article_link_list  =[]
+
+#Creating lists to store the article title, date, author and content
+article_title_list = []
+article_author_list = []
+article_date_list = []
+article_content_list = []
+
+#Creating a list to remove links that contain the below words, because they are
+#not links to the article but to a new page with more articles.
+matches = ["squared", "sponsored", "research-spotlight", "industry-perspective"]
+
+#Looping through the pages to extract article links and storing them in article_link_list
+for i in range(len(page_num)):
+    complete_url = url_start + page_num[i]
+    # print(complete_url)
+
+    response = requests.get(complete_url)
+    #uncomment below for progress bar
+    
+    print(response, 'here')
+
+    page_soup = BeautifulSoup(response.content, 'html.parser')
+
+    for item in page_soup.find_all('div', class_='article-detail'):
+        #print('here_now')
+        article_link = item.find('a')
+        specific_article_link = article_link.get('href')
+        article_link_start = 'https://www.greentechmedia.com'
+        complete_article_link = article_link_start+specific_article_link
+        #print(complete_article_link)
+        #skipping article links that contains any string in matches list above
+        if any([x in complete_article_link for x in matches]):
+            continue 
+        
+        article_link_list.append(complete_article_link)
+#checking length of list i.e number of atricle links
+print(len(article_link_list))
+print(article_link_list)
+
+
+#Iterating through each atricle link in article_link_list to extract title, date, author, content
+
+for link in article_link_list:
+    
+           
+    #print('Getting info about', link)
+    article_response = requests.get(link)
+    #print(article_response)
+    
+    
+    article_soup = BeautifulSoup(article_response.content, 'html.parser')
+    #print(article_soup)
+    #print(type(article_soup))
+    
+    author_soup=article_soup.find_all('span', class_ = 'article-author')    
+    
+    #adding line below because some links open up new windows with new links, hence not considering those pages in the analysis
+    if author_soup == []:
+        continue
+    for author_n in author_soup:
+        author_name=author_n.get_text()
+        article_author_list.append(author_name)
+       
+    
+    
+    try:
+        article_title = article_soup.find('h1').get_text()
+        #print(article_title)             
+        article_title_list.append(article_title)
+    except AttributeError:
+        pass
+    
+    
+    date_soup=article_soup.find_all('span', class_ = 'article-date')
+    for date_n in date_soup:
+        try:
+            date=date_n.get_text()
+            article_date_list.append(date)
+        except AttributeError:
+            pass
+        
+
+    article_body_soup=article_soup.find_all('div', class_ = 'col-md-9 article-content first-article-content')
+    for body in article_body_soup:
+        para = body.find_all('p')
+        new_para = []
+        for paragraph in para:
+            article_content = paragraph.get_text()
+            new_para.append(article_content)
+        
+        article_content_list.append(new_para)
+        
+    #checking length of article_list cmpared to that of author_list. This is done to understand where the lengths started to be different
+    # to find the root cause of the error. 
+    print(article_link_list.index(link))
+    
+    if len(article_title_list) == len(article_author_list):
+        print('True')
+    else:
+        print('False')
+        
+print(len(article_link_list))
+#Checking lengths of all lists to confirm the lists are of the same length
+
+print(len(article_title_list))
+print(len(article_author_list))
+print(len(article_date_list))
+print(len(article_content_list))
+
+print(article_title_list)
+
+
+green_tech_data = pd.DataFrame()
+green_tech_data['Title'] = article_title_list 
+green_tech_data['Author'] = article_author_list
+green_tech_data['Date'] = article_date_list
+green_tech_data['Content'] = article_content_list
+
+green_tech_data.head()
