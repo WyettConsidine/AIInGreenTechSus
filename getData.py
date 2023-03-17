@@ -28,7 +28,7 @@ import re
 #https://arxiv.org/search/advanced
 
 
-def getData(query: String):
+def getData(query):
     queryURL = "http://export.arxiv.org/api/query?search_query=" + query
     response = requests.get(queryURL)
     root = ET.fromstring(response.content)
@@ -81,4 +81,7 @@ def cleanData(df):
     return df
 
 
+def saveAsTxt(df, filename):
+    path = os.getcwd()
+    df.to_csv(path + '/' + filename, sep='\t', index=False)
 
