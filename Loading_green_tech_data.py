@@ -173,7 +173,20 @@ def remove_stopwords(line):
 #print(remove_stopwords(test_line))
 
 green_tech_data['Content'] = green_tech_data['Content'].apply(remove_stopwords)
+green_content = ' '.join(green_tech_data['Content'])
+word_cloud = WordCloud(collocations = False, background_color = 'white').generate(green_content)
+plt.imshow(word_cloud, interpolation = 'bilinear')
+plt.axis('off')
+plt.show()
 
+#Adding label column with value 'green_tech'
+green_tech_data['Label'] = 'green_tech'
+
+#checking columns
+green_tech_data.head()
+
+#saving data as text
+green_tech_data.to_csv('C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSusgreen_tech.txt', sep = '\t', index = False)
 
 
 
