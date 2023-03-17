@@ -5,3 +5,4 @@ query = 'order: -announced_date_first; size: 200; hide_abstracts: True; include_
 df = getData.getData(query)
 print(df)
 
+getData.saveAsTxt(df, 'SustainabilityData.txt')
