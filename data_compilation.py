@@ -10,10 +10,12 @@ import re
 
 ai_data = pd.read_csv("C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSus/arXiv_AI.txt", sep = '\t')
 g_data = pd.read_csv("C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSus/green_tech.txt", sep = '\t')
-s_data = pd.read_csv("C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSus/sus_data.txt", sep = '\t')
+s_data = pd.read_csv("C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSus/arXiv_sustainability.txt", sep = '\t')
 
 ai_data.head()
 g_data.head()
+s_data.head()
+
 
 #processing the AI data, changing column name, adding topic column
 ai_data.columns
@@ -31,13 +33,29 @@ def strip_date(string):
 
 #Creating function to change text to date
 def change_to_Date(string):
-    datetime_object = datetime.strptime(string, '%Y-%m-%d').date()
+    datetime_object = datetime.strptime(string,'%Y-%m-%d').date()
     return datetime_object
     
 ai_data['Date'] = ai_data['Date'].apply(strip_date)
 ai_data['Date'] = ai_data['Date'].apply(change_to_Date)
 
+
 ai_data.info()
+
+
+#Sustainability data
+s_data = s_data[['title', 'updated', 'summary']]
+s_data['Topic'] = 'Sustainability'
+s_data.rename(columns = {'title': 'Title', 'updated': 'Date', 'summary': 'Content'}, inplace = True)
+s_data.columns
+s_data.head()
+
+s_data['Date'] = s_data['Date'].apply(strip_date)
+s_data['Date'] = s_data['Date'].apply(change_to_Date)
+
+s_data.info()
+
+
 
 
 #formatting green tech data
@@ -64,17 +82,14 @@ g_data.shape
 df_partial = pd.concat([ai_data, g_data])
 df_partial.shape
 
-# printed in default format
+df = pd.concat([df_partial, s_data])
 
-sus_data.columns
-sus_data = sus_data[[]]
+
 
 
 matches = ['Artificial Intelligence', 'artificial intelligence', ' ai ',' AI ', 'Machine Learning', ' ml ', ' ML ']
 
-for i in 
-if any([x in complete_article_link for x in matches]):
-    continue 
+
 
 
 
