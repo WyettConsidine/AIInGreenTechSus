@@ -13,6 +13,8 @@ import string
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
 
 
 
@@ -186,7 +188,7 @@ green_tech_data['Label'] = 'green_tech'
 green_tech_data.head()
 
 #saving data as text
-green_tech_data.to_csv('C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSusgreen_tech.txt', sep = '\t', index = False)
+green_tech_data.to_csv('C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSus/green_tech.txt', sep = '\t', index = False)
 
 
 
