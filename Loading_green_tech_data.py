@@ -144,6 +144,8 @@ green_tech_data.head()
 def make_one_string(list):
     return(' '.join(list))
 
+green_tech_data.to_csv('C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSus/green_tech_original.txt', sep = '\t', index = False)
+
 green_tech_data['Content'] = green_tech_data['Content'].apply(make_one_string)
  
 #removing all punctuations and nums from title and content 

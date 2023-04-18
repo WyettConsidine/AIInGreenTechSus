@@ -9,7 +9,7 @@ import re
 
 
 ai_data = pd.read_csv("C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSus/arXiv_AI.txt", sep = '\t')
-g_data = pd.read_csv("C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSus/green_tech.txt", sep = '\t')
+g_data = pd.read_csv("C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSus/green_tech_original.txt", sep = '\t')
 s_data = pd.read_csv("C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSus/arXiv_sustainability.txt", sep = '\t')
 
 ai_data.head()
@@ -76,6 +76,8 @@ g_data = g_data[['Title', 'Date', 'Content']]
 g_data['Topic'] = 'Green_Tech'
 g_data['Date'] = g_data['Date'].apply(change_to_Date2)
 
+
+#Joining dataframes
 ai_data.shape
 g_data.shape
 
@@ -84,9 +86,11 @@ df_partial.shape
 
 df = pd.concat([df_partial, s_data])
 
+df.to_csv('C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSus/complete_data.csv')
 
 
 
+#creating strings to match
 matches = ['Artificial Intelligence', 'artificial intelligence', ' ai ',' AI ', 'Machine Learning', ' ml ', ' ML ']
 
 
