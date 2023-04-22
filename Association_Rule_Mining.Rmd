@@ -30,22 +30,27 @@ path <- 'C:/Users/gadge/OneDrive/Desktop/MachineLearning/Project/Data'
 NYT <- read_csv(paste(path,'/NewYorkTimesBestsellersLists.csv',sep = ''))
 head(NYT)
 ```
+
 ```{r}
 Wiki <- read_excel(paste(path,'/Wikipedia_information.xlsx',sep = ''))
 head(Wiki)
 ```
+
 ```{r}
 GoogleBooks <- read_csv(paste(path,'/isbn_data.csv',sep = ''))
 head(GoogleBooks)
 ```
+
 ```{r}
 NYT_books_isbn <- read_csv(paste(path,'/Book_ISBN.csv',sep = ''))
 head(NYT_books_isbn)
 ```
+
 ```{r}
 GoogleBooks <- NYT_books_isbn %>% left_join(GoogleBooks, by = c('isbn13'))
 head(GoogleBooks)
 ```
+
 ```{r}
 GoogleBooks$Book_Published_date <- as.Date(GoogleBooks$Book_Published_date)
 head(GoogleBooks)
@@ -56,6 +61,7 @@ Googlebooks_date <- GoogleBooks %>% group_by(title, author) %>%
   summarise(Published_date = min(Book_Published_date, na.rm = TRUE))
 head(Googlebooks_date)
 ```
+
 ```{r}
 p <- function(v) {
   Reduce(f=paste0, x = v)
@@ -74,12 +80,12 @@ GoogleBooks_Genre$Categories <- gsub("\\]\\[",'","',
 
 head(GoogleBooks_Genre)
 ```
+
 ```{r}
 GoogleBooks_date_genre <- Googlebooks_date %>% left_join(GoogleBooks_Genre,
                                                          by = c('title','author'))
 head(GoogleBooks_date_genre)
 ```
-
 
 ```{r}
 head(Wiki)
@@ -90,11 +96,13 @@ Wiki <- Wiki %>% filter(Genre != 'N/A') %>%
   mutate(Genre = gsub("', '",'","',Genre)) 
 head(Wiki)
 ```
+
 ```{r}
 Wiki$Genre <- gsub("\\['","",Wiki$Genre)
 Wiki$Genre <- tolower(gsub("\\']","",Wiki$Genre))
 head(Wiki)
 ```
+
 ```{r}
 NYT$year <- paste("Times Bestseller in",as.factor(format(NYT$published_date, "%Y")))
 head(NYT)
@@ -120,10 +128,12 @@ genre_simplified <- function(genre) {
 NYT$Genre <- sapply(NYT$genre, genre_simplified)
 
 ```
+
 ```{r}
 NYT <- NYT %>% select(title,author,Genre,year) %>% filter(Genre != "youngadult") %>% distinct
 NYT
 ```
+
 ```{r}
 Books <- NYT %>% left_join(GoogleBooks_date_genre %>%
                              select(Published_date, Categories),
@@ -131,18 +141,22 @@ Books <- NYT %>% left_join(GoogleBooks_date_genre %>%
 Books$Categories <- gsub("\\","",Books$Categories,fixed = TRUE)
 head(Books)
 ```
+
 ```{r}
 Wiki <- Wiki %>% select(book, Genre)
 head(Wiki)
 ```
+
 ```{r}
 colnames(Wiki) <- c('title','Wiki_Category')
 head(Wiki)
 ```
+
 ```{r}
 Books <- Books %>% left_join(Wiki, by = 'title')
 head(Books)
 ```
+
 ```{r}
 Books_ARM <- Books %>% select(year,Genre,Categories,Wiki_Category) %>%
   filter((Categories != Genre & !(is.na(Categories)))|
@@ -158,7 +172,6 @@ write.table(Books_ARM, file = paste(path,'/NYT_ARM.txt',sep = ''),
             row.names = FALSE)
 ```
 
-
 ```{r}
 dim(Books_ARM)
 ```
@@ -171,6 +184,7 @@ Books <- read.transactions(paste(path,'/NYT_ARM.txt',sep = ''),
                            cols=NULL) ## The dataset has no row numbers
 inspect(Books[1:10])
 ```
+
 ```{r}
 Frules = arules::apriori(Books,parameter = list(support = 0.01,confidence = 0.01))
 
@@ -181,6 +195,7 @@ inspect(Frules)
 ```{r}
 plot(Frules)
 ```
+
 ```{r}
 (widget <- plot(Frules, engine = "htmlwidget"))
 saveWidget(
@@ -209,7 +224,6 @@ SortedRules <- sort(Frules, by="lift", decreasing=TRUE)
 inspect(SortedRules[1:15])
 ```
 
-
 ```{r}
 advice_rules <- arules::apriori(Books,parameter = list(support = 0.01,confidence = 0.01,
                                                        minlen = 2),
@@ -224,11 +238,11 @@ advice_rules <- arules::apriori(Books,parameter = list(support = 0.01,confidence
                                                            "Times Bestseller in 2022")))
 inspect(advice_rules)
 ```
+
 ```{r}
 plot(advice_rules, method="graph")
 
 ```
-
 
 ```{r}
 fiction_rules <- arules::apriori(Books,parameter = list(support = 0.01,confidence = 0.01,
@@ -244,10 +258,12 @@ fiction_rules <- arules::apriori(Books,parameter = list(support = 0.01,confidenc
                                                            "Times Bestseller in 2022")))
 inspect(fiction_rules)
 ```
+
 ```{r}
 plot(fiction_rules, method="graph")
 
 ```
+
 ```{r}
 non_fiction_rules <- arules::apriori(Books,parameter = list(support = 0.01,
                                                             confidence = 0.01,
@@ -264,10 +280,12 @@ non_fiction_rules <- arules::apriori(Books,parameter = list(support = 0.01,
                                                            "Times Bestseller in 2023")))
 inspect(non_fiction_rules)
 ```
+
 ```{r}
 plot(non_fiction_rules, method="graph")
 
 ```
+
 ```{r}
 rules <- arules::apriori(Books,parameter = list(support = 0.005,
                                                             confidence = 0.01,
@@ -308,6 +326,7 @@ advice_year_rules <- subset(rules, subset = lhs %in% "advice" & lhs %in%
                                                            "Times Bestseller in 2023"))
 
 ```
+
 ```{r}
 (widget <- plot(non_fiction_year_rules, method = 'graph', engine = 'htmlwidget'))
 
@@ -321,9 +340,11 @@ saveWidget(
   knitrOptions = list()
 )
 ```
+
 ```{r}
 plot(fiction_year_rules, method = 'graph', engine = 'htmlwidget')
 ```
+
 ```{r}
 (widget <- plot(advice_year_rules, method = 'graph', engine = 'htmlwidget'))
 
