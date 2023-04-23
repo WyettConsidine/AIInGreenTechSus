@@ -42,13 +42,12 @@ def clean_string(line):
 
 df['CleanContent'] = [clean_string(line) for line in df['Content']]
 
-df.to_csv(r"C:\Users\wyett\OneDrive\Documents\CSCI5502\AIInGreenTechSus\cleanedCompedData.csv")
+print(df['CleanContent'])
 
-AITxt = df[ df['Topic'] == 'Artificial_Intellgence']
-GreenTxt = df[ df['Topic'] == 'Green_Tech']
-SusTxt = df[ df['Topic'] == 'Sustainability']
+df['CleanContent'].to_csv(r"C:\Users\wyett\OneDrive\Documents\CSCI5502\AIInGreenTechSus\cleanedCompedData.csv")
 
-print(AITxt.columns)
+
+
 
 
 #df.to_csv(r"C:\Users\wyett\OneDrive\Documents\CSCI5502\AIInGreenTechSus\transactionalData.csv")
