@@ -36,7 +36,7 @@ transGr <- arules::read.transactions("CSCI5502/AIInGreenTechSus/GreenTxtClean.cs
                                    sep=" ",  ## csv file
                                    cols=NULL) ## The dataset has no row numbers
 
-rulesG = arules::apriori(transGr, parameter = list(support = 0.8,confidence = 0.4), maxlen=5)
+rulesG = arules::apriori(transGr, parameter = list(support = 0.8,confidence = 0.7), maxlen=5)
 print(length(rulesG))
 rulesG <- subset(rulesG, subset = arules::size(arules::lhs(rulesG)) != 0)
 arules::inspect(rulesG)
