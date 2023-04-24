@@ -65,9 +65,9 @@ transA <- arules::read.transactions("CSCI5502/AIInGreenTechSus/AITxtClean.csv",
                                     sep=" ",  ## csv file
                                     cols=NULL) ## The dataset has no row numbers
 
-rulesA = arules::apriori(transA, parameter = list(support = 0.15,confidence = 0.84), maxlen=5)
+rulesA = arules::apriori(transA, parameter = list(support = 0.1,confidence = 0.7), maxlen=5)
 print(length(rulesA))
-rulesA <- subset(rulesA, subset = arules::size(arules::lhs(rulesA)) != 0)
+rulesA <- subset(rulesA, subset = arules::size(arules::lhs(rulesA)) > 1)
 arules::inspect(rulesA)
 
 plot(rulesA, method = "graph")
