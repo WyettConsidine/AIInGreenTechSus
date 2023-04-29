@@ -23,8 +23,13 @@ from nltk.stem import PorterStemmer
 import string
 
 
-df = pd.read_csv("https://raw.githubusercontent.com/WyettConsidine/AIInGreenTechSus/master/complete_data.csv")
-df.memory_usage()
+original_path = 'https://raw.githubusercontent.com/WyettConsidine/AIInGreenTechSus/master/complete_data.csv'
+
+new_path = 'C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSus/complete_data.csv'
+
+
+df = pd.read_csv(new_path)
+print(df.memory_usage())
 df['Date'] = pd.to_datetime(df['Date'])
 df['Content'] = df['Content'].astype('str')
 
@@ -85,13 +90,24 @@ plt.savefig(path +"/GreentechandsusinAi.png")
 
 
 #***********************************************************************#
+#df = pd.read_csv('C:/Users/chaub/Documents/CU_Boulder/Spring 2023/CSCI 5502 Data Mining/Data Mining Project/AIInGreenTechSus/complete_data.csv')
+#df['Date'] = pd.to_datetime(df['Date'])
+#df['Content'] = df['Content'].astype('str')
 
+#df.memory_usage()
+
+#green_tech = df[df['Topic'] == "Green_Tech"]
+#Sus = df[df['Topic'] == 'Sustainability']
+#ai = df[df['Topic'] == "Artificial_Intellgence"]
+                 
 green_tech.head()
 green_tech.info()
 print(f'Shape of green tech data : {green_tech.shape}')
 gt = green_tech[green_tech['AI']]
 gt = gt[['Title', 'Date', 'Content', 'Topic']]
 print(f'Shape of subsetted green tech data : {gt.shape}')
+print(gt.memory_usage(deep = True))
+
 
 Sus.head()
 print(f'Shape of sustainable data : {Sus.shape}')
@@ -187,5 +203,6 @@ s.rename({'Content': 'Summary'}, axis = 1, inplace = True)
 ai.rename({'Content': 'Summary'}, axis = 1, inplace = True)
 
 
-
-
+print(gt.memory_usage(deep = True))
+print(gt.iloc[2]['Content'])
+print(gt.iloc[2]['Summary'])
