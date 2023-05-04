@@ -64,6 +64,8 @@ green_tech['Year'] = green_tech['Date'].dt.to_period('Y')
 ai['Year'] = ai['Date'].dt.to_period('Y')
 Sus['Year'] = Sus['Date'].dt.to_period('Y')
 
+
+
 lemmatizer = WordNetLemmatizer()
 def text_clean(data):
     data = re.sub('[^A-Za-z]', ' ', data) #remove special char
@@ -75,6 +77,10 @@ def text_clean(data):
 ai['summary_clean'] = ai['Content'].apply(text_clean)
 green_tech['summary_clean'] = green_tech['Content'].apply(text_clean)
 Sus['summary_clean'] = Sus['Content'].apply(text_clean)
+
+
+
+
 
 from sklearn.decomposition import NMF, LatentDirichletAllocation, TruncatedSVD
 
@@ -144,3 +150,6 @@ topic_modelling(gt_ai['summary_clean'], 6, 10,"greentech_with_ai")
 sus_ai = Sus[Sus['AI']]
 topic_modelling(sus_ai['summary_clean'], 6, 10,"sus_with_ai")
 
+ai_gtsus[['id','Title','Date','Content']].to_csv(path+'/AI_Articles_Related_to_GreenTechSus.csv',index = False)
+gt_ai[['id','Title','Date','Content']].to_csv(path+'/GreenTech_Articles_Related_to_AI.csv',index = False)
+sus_ai[['id','Title','Date','Content']].to_csv(path+'/Sustainability_Articles_Related_to_AI.csv',index = False)
